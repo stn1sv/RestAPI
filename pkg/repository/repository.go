@@ -9,7 +9,7 @@ type Person interface {
 	CreatePerson(person models.Person) (int, error)
 	GetPerson(params models.Person) ([]models.Person, error)
 	DeletePerson(id int) error
-	UpdatePerson() error
+	UpdatePerson(id int, params models.Person) error
 }
 
 type Repository struct {

@@ -9,7 +9,7 @@ type Person interface {
 	AddPerson(person models.Person) (int, error)
 	GetPerson(params models.Person) ([]models.Person, error)
 	DeletePerson(id string) error
-	UpdatePerson()
+	UpdatePerson(id string, params models.Person) error
 }
 
 type Service struct {

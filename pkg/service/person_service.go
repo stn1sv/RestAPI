@@ -114,7 +114,6 @@ func (s *PersonService) AddPerson(person models.Person) (int, error) {
 }
 
 func (s *PersonService) GetPerson(params models.Person) ([]models.Person, error) {
-
 	persons, err := s.repo.GetPerson(params)
 	if err != nil {
 		log.Println("GetPerson: " + err.Error())
@@ -141,7 +140,19 @@ func (s *PersonService) DeletePerson(id string) error {
 	return nil
 }
 
-func (s *PersonService) UpdatePerson() {
-	//TODO implement me
-	panic("implement me")
+func (s *PersonService) UpdatePerson(id string, params models.Person) error {
+	id_int, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println("UpdatePerson: " + err.Error())
+		return err
+	}
+
+	err = s.repo.UpdatePerson(id_int, params)
+	if err != nil {
+		log.Println("UpdatePerson: " + err.Error())
+		return err
+	}
+
+	log.Printf("Person with id %s update successfully", id)
+	return nil
 }

@@ -26,13 +26,13 @@ func (h *Handler) AddPerson(c *gin.Context) {
 }
 
 func (h *Handler) GetPerson(c *gin.Context) {
-	var person models.Person
+	var params models.Person
 
-	if err := c.BindJSON(&person); err != nil {
+	if err := c.BindJSON(&params); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	persons, err := h.service.GetPerson(person)
+	persons, err := h.service.GetPerson(params)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
@@ -55,5 +55,19 @@ func (h *Handler) DeletePerson(c *gin.Context) {
 }
 
 func (h *Handler) UpdatePerson(c *gin.Context) {
+	var params models.Person
+	id := c.Query("id")
 
+	if err := c.BindJSON(&params); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err := h.service.UpdatePerson(id, params)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Status(http.StatusOK)
 }

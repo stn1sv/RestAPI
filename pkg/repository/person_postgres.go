@@ -32,8 +32,38 @@ func (r *PersonPostgres) CreatePerson(person models.Person) (int, error) {
 
 func (r *PersonPostgres) GetPerson(params models.Person) ([]models.Person, error) {
 	var persons []models.Person
-	var conditions []string
+	where := strings.Join(createConditions(params), " AND ")
 
+	query := fmt.Sprintf("SELECT name, surname, patronymic, age, gender, nationality FROM people WHERE %s", where)
+	err := r.db.Select(&persons, query)
+
+	return persons, err
+}
+
+func (r *PersonPostgres) DeletePerson(id int) error {
+	query := "DELETE FROM people WHERE id = $1"
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *PersonPostgres) UpdatePerson(id int, params models.Person) error {
+	where := strings.Join(createConditions(params), ",")
+	query := fmt.Sprintf("UPDATE people SET %s WHERE id = %d", where, id)
+
+	_, err := r.db.Exec(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func createConditions(params models.Person) []string {
+	var conditions []string
 	if params.Name != "" {
 		conditions = append(conditions, fmt.Sprintf("%s = '%v'", "name", params.Name))
 	}
@@ -52,25 +82,6 @@ func (r *PersonPostgres) GetPerson(params models.Person) ([]models.Person, error
 	if params.Nationality != "" {
 		conditions = append(conditions, fmt.Sprintf("%s = '%v'", "nationality", params.Nationality))
 	}
-	where := strings.Join(conditions, " AND ")
 
-	query := fmt.Sprintf("SELECT name, surname, patronymic, age, gender, nationality FROM people WHERE %s", where)
-	err := r.db.Select(&persons, query)
-
-	return persons, err
-}
-
-func (r *PersonPostgres) DeletePerson(id int) error {
-	query := "DELETE FROM people WHERE id = $1"
-	_, err := r.db.Exec(query, id)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r *PersonPostgres) UpdatePerson() error {
-	//TODO implement me
-	panic("implement me")
+	return conditions
 }
