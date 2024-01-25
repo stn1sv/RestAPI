@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"testTask/models"
-	"testTask/repository"
+	"testTask/pkg/repository"
 )
 
 type PersonService struct {

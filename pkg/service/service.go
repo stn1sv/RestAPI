@@ -2,7 +2,7 @@ package service
 
 import (
 	"testTask/models"
-	"testTask/repository"
+	"testTask/pkg/repository"
 )
 
 type Person interface {

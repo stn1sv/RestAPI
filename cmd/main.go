@@ -10,8 +10,8 @@ import (
 	"os/signal"
 	"syscall"
 	handler "testTask/pkg/handlers"
+	repository2 "testTask/pkg/repository"
 	"testTask/pkg/service"
-	"testTask/repository"
 	"testTask/server"
 )
 
@@ -23,13 +23,13 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db, err := repository.NewPostgresDB()
+	db, err := repository2.NewPostgresDB()
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %s", err.Error())
 	}
 	defer db.Close()
 
-	repos := repository.NewRepository(db)
+	repos := repository2.NewRepository(db)
 	service := service.NewService(repos)
 	handlers := handler.NewHandler(service)
 
